@@ -49,7 +49,7 @@ from tobrot.plugins.choose_rclone_config import rclone_command_f
 from tobrot.plugins.custom_thumbnail import clear_thumb_nail, save_thumb_nail
 from tobrot.plugins.incoming_message_fn import g_clonee, g_yt_playlist, incoming_message_f, incoming_purge_message_f, \
                                                incoming_youtube_dl_f, rename_tg_file, auto_callback
-from tobrot.plugins.help_func import help_message_f, stats, user_settings, settings_callback, picture_add, pictures, pics_callback, owner_set
+from tobrot.plugins.help_func import help_message_f, stats, user_settings, settings_callback, picture_add, pictures, pics_callback
 from tobrot.plugins.speedtest import get_speed
 from tobrot.plugins.mediainfo import mediainfo
 from tobrot.plugins.rclone_size import check_size_g, g_clearme
@@ -299,7 +299,7 @@ if __name__ == "__main__":
         a.add_handler(MessageHandler(nyaa_search_sukebei, filters=filters.command(['sukebei', f'sukebei@{username}']) & filters.chat(chats=AUTH_CHANNEL)))
         a.add_handler(MessageHandler(picture_add, filters=filters.command(['addpic', f'addpic@{username}']) & filters.chat(chats=AUTH_CHANNEL)))
         a.add_handler(MessageHandler(pictures, filters=filters.command(['pics', f'pics@{username}']) & filters.chat(chats=AUTH_CHANNEL)))
-        a.add_handler(MessageHandler(owner_set, filters=filters.command(['ownerset', f'ownerset@{username}']) & filters.chat(chats=AUTH_CHANNEL) & filters.private))
+        #a.add_handler(MessageHandler(owner_set, filters=filters.command(['ownerset', f'ownerset@{username}']) & filters.chat(chats=AUTH_CHANNEL) & filters.private))
         for tcom, value in torrents_dict.items():
             a.add_handler(MessageHandler(TorrentSearch(tcom, value['source'], value['result_str']).find, filters.command([tcom, f'{tcom}@{username}'])))
             a.add_handler(CallbackQueryHandler(TorrentSearch(tcom, value['source'], value['result_str']).previous, filters.regex(f"{tcom}_previous")))
