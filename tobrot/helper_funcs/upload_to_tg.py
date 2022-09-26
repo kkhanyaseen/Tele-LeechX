@@ -130,7 +130,7 @@ async def upload_to_tg(
                 f"<b><i>🎯Detected File Size: {humanbytes(opath.getsize(local_file_name))} </i></b>\n"
                 "\n<code>🗃 Trying to split the files . . .</code>"
             )
-            splitted_dir = await split_large_files(local_file_name, SPLIT_SIZE)
+            splitted_dir = await split_large_files(local_file_name, int(SPLIT_SIZE))
             totlaa_sleif = listdir(splitted_dir)
             totlaa_sleif.sort()
             number_of_files = len(totlaa_sleif)
