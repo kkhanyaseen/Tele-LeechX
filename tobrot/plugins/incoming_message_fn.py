@@ -67,6 +67,16 @@ async def check_bot_pm(client: Client, message: Message):
             return False
     else: return True
 
+async def auto_callback(c: Client, cb: CallbackQuery):
+    if cb.data == "alxLeech":
+        await incoming_message_f(c, cb.message.reply_to_message, 'leech')
+    elif cb.data == "alxExtract":
+        await incoming_message_f(c, cb.message.reply_to_message, 'extract')
+    elif cb.data == "alxArchive":
+        await incoming_message_f(c, cb.message.reply_to_message, 'archive')
+    elif cb.data == "alxGLeech":
+        await incoming_message_f(c, cb.message.reply_to_message, 'gleech')
+
 async def incoming_message_f(client: Client, message: Message, auto_cmd=None):
     """/leech command or /gleech command"""
     if not AUTO_LEECH:
