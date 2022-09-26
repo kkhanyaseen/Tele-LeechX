@@ -252,6 +252,7 @@ LEECH_INVITE = getVar("LEECH_INVITE", "False")
 EX_LEECH_LOG = [int(chats) if (' ' not in getVar('EX_LEECH_LOG', '')) else int(chats) for chats in getVar('EX_LEECH_LOG', '').split()]
 EXCEP_CHATS = [int(chats) if (' ' not in getVar('EXCEP_CHATS', '')) else int(chats) for chats in getVar('EXCEP_CHATS', '').split()]
 BOT_PM = getVar("BOT_PM", False)
+BOT_PM = True if BOT_PM.lower() == "true" else False
 AUTO_LEECH = getVar("AUTO_LEECH", False)
 AUTO_LEECH = True if AUTO_LEECH.lower() == "true" else False
 
