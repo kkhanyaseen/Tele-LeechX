@@ -69,13 +69,14 @@ async def check_bot_pm(client: Client, message: Message):
 
 async def auto_callback(c: Client, cb: CallbackQuery):
     if cb.data == "alxLeech":
-        await incoming_message_f(c, cb.message.reply_to_message, 'leech')
+        await cb.message.delete()
+        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.LeechCommand)
     elif cb.data == "alxExtract":
-        await incoming_message_f(c, cb.message.reply_to_message, 'extract')
+        await cb.message.delete()
+        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.ExtractCommand)
     elif cb.data == "alxArchive":
-        await incoming_message_f(c, cb.message.reply_to_message, 'archive')
-    elif cb.data == "alxGLeech":
-        await incoming_message_f(c, cb.message.reply_to_message, 'gleech')
+        await cb.message.delete()
+        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.ArchiveCommand)
 
 async def incoming_message_f(client: Client, message: Message, auto_cmd=None):
     """/leech command or /gleech command"""
@@ -120,10 +121,9 @@ async def incoming_message_f(client: Client, message: Message, auto_cmd=None):
         buttons = [
             [InlineKeyboardButton('Leech', callback_data='alxLeech'),
             InlineKeyboardButton('Extract', callback_data='alxExtract')],
-            [InlineKeyboardButton('Archive', callback_data='alxArchive'),
-            InlineKeyboardButton('GLeech', callback_data='alxGLeech')]
+            [InlineKeyboardButton('Archive', callback_data='alxArchive')]
         ]
-        await message.reply_text(text="Here you can Configure your Leech Preferences, ( Auto Set in Command to Disable this ) !!", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
+        await i_m_sefg.edit(text="<b><i>Here you can Configure your Leech Preferences, ( Auto Set in Command to Disable this ) !!</i></b>", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
         return
     elif AUTO_LEECH and auto_cmd:
         dl_url, cf_name, _, _ = await extract_link(message, "LEECH")
