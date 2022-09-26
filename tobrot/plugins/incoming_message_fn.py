@@ -67,7 +67,7 @@ async def check_bot_pm(client: Client, message: Message):
             return False
     else: return True
 
-async def incoming_message_f(client: Client, message: Message):
+async def incoming_message_f(client: Client, message: Message, auto_cmd=None):
     """/leech command or /gleech command"""
     if not AUTO_LEECH:
         user_command = message.command[0]
@@ -75,21 +75,21 @@ async def incoming_message_f(client: Client, message: Message):
     txtCancel = False
     ubot = (await client.get_me()).username
 
-    if FSUB_CHANNEL:
+    if FSUB_CHANNEL and not auto_cmd:
         LOGGER.info("[ForceSubscribe] Initiated")
         backCode = await handle_force_sub(client, message)
         if backCode == 400:
             LOGGER.info(f"[ForceSubscribe] User Not In {FSUB_CHANNEL}")
             return
 
-    if BOT_PM and LEECH_LOG:
+    if BOT_PM and LEECH_LOG and not auto_cmd:
         if not (await check_bot_pm(client, message)):
             return
-    elif BOT_PM:
+    elif BOT_PM and not auto_cmd:
         LOGGER.warning("[BOT PM] Must Provide LEECH_LOG to Use it")
 
     rpy_mssg_id = None
-    if USER_DTS:
+    if USER_DTS and not auto_cmd:
         func_name = 'Auto Leech' if AUTO_LEECH else 'Leech'
         text__, txtCancel = getDetails(client, message, func_name)
         link_text = await message.reply_text(text=text__, parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
@@ -106,16 +106,18 @@ async def incoming_message_f(client: Client, message: Message):
     is_file = False
     dl_url = ''
     cf_name = ''
-    if AUTO_LEECH:
-        user_command = 'leech'
-        dl_url, cf_name, _, _ = await extract_link(message, "LEECH")
+    if AUTO_LEECH and not auto_cmd:
         buttons = [
-            [InlineKeyboardButton('Leech', callback_data='hi'),
-            InlineKeyboardButton('Extract', callback_data='hi')],
-            [InlineKeyboardButton('Cloud', callback_data='hi'),
-            InlineKeyboardButton('CloudZip', callback_data='hi')]
+            [InlineKeyboardButton('Leech', callback_data='alxLeech'),
+            InlineKeyboardButton('Extract', callback_data='alxExtract')],
+            [InlineKeyboardButton('Archive', callback_data='alxArchive'),
+            InlineKeyboardButton('GLeech', callback_data='alxGLeech')]
         ]
-        #await message.reply_text(text="Here you can Configure your Leech Preferences, Auto Set in Command to Disable this !!", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
+        await message.reply_text(text="Here you can Configure your Leech Preferences, ( Auto Set in Command to Disable this ) !!", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
+        return
+    elif AUTO_LEECH and auto_cmd:
+        dl_url, cf_name, _, _ = await extract_link(message, "LEECH")
+        user_command = auto_cmd
     elif rep_mess := message.reply_to_message:
         file_name = ''
         if rep_mess.media:
