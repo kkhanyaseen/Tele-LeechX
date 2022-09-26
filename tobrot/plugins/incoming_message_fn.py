@@ -70,13 +70,13 @@ async def check_bot_pm(client: Client, message: Message):
 async def auto_callback(c: Client, cb: CallbackQuery):
     if cb.data == "alxLeech":
         await cb.message.delete()
-        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.LeechCommand)
+        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.LeechCommand.lower())
     elif cb.data == "alxExtract":
         await cb.message.delete()
-        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.ExtractCommand)
+        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.ExtractCommand.lower())
     elif cb.data == "alxArchive":
         await cb.message.delete()
-        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.ArchiveCommand)
+        await incoming_message_f(c, cb.message.reply_to_message, BotCommands.ArchiveCommand.lower())
 
 async def incoming_message_f(client: Client, message: Message, auto_cmd=None):
     """/leech command or /gleech command"""
