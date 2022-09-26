@@ -121,12 +121,10 @@ for imp in ["TG_BOT_TOKEN1", "APP_ID1", "API_HASH1", "OWNER_ID", "AUTH_CHANNEL"]
         exit()
 
 # Telegram Max File Upload Size >>>>>>>>>>
-MAX_FILE_SIZE = 50000000
 TG_MAX_FILE_SIZE = 2097152000
 TG_PRM_FILE_SIZE = 4194304000
-FREE_USER_MAX_FILE_SIZE = 50000000
 
-# chunk size that should be used with requests
+# Chunk Size that should be used with Requests >>>>>>>>>>
 CHUNK_SIZE = int(getVar("CHUNK_SIZE", "128"))
 DEF_THUMB_NAIL_VID_S = getVar("DEF_THUMB_NAIL_VID_S", "")
 MAX_MESSAGE_LENGTH = 4096
@@ -138,7 +136,7 @@ PROCESS_MAX_TIMEOUT = 3600
 SP_LIT_ALGO_RITH_M = getVar("SP_LIT_ALGO_RITH_M", "hjs")
 ARIA_TWO_STARTED_PORT = int(getVar("ARIA_TWO_STARTED_PORT", "6800"))
 EDIT_SLEEP_TIME_OUT = int(getVar("EDIT_SLEEP_TIME_OUT", "10"))
-MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START = int(getVar("MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START", 600))
+MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START = int(getVar("MAX_TIME_TO_WAIT_FOR_TORRENTS_TO_START", 1200))
 SPLIT_SIZE = getVar("SPLIT_SIZE", None)
 
 # Vars for the Display Progress >>>>>>>>
@@ -146,9 +144,10 @@ FINISHED_PROGRESS_STR = getVar("FINISHED_PROGRESS_STR", "■")
 HALF_FINISHED = getVar("HALF_FINISHED", "◩")
 UN_FINISHED_PROGRESS_STR = getVar("UN_FINISHED_PROGRESS_STR", "□")
 
-# Add Offensive API >>>>>>>>
+# Add Offensive API & Filename Parsing >>>>>>>>
 TG_OFFENSIVE_API = getVar("TG_OFFENSIVE_API", None)
-CUSTOM_FILE_NAME = getVar("CUSTOM_FILE_NAME", "")
+CUSTOM_PREFIX = getVar("CUSTOM_PREFIX", "")
+CUSTOM_SUFFIX = getVar("CUSTOM_SUFFIX", "")
 
 #Bot Command [Leech]  >>>>>>>>>>>
 LEECH_COMMAND = getVar("LEECH_COMMAND", "leech")
