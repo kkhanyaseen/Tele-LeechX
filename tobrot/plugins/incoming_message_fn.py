@@ -47,7 +47,7 @@ async def incoming_purge_message_f(client: Client, message: Message):
 
 async def check_bot_pm(client: Client, message: Message):
     if message.chat.type != enums.ChatType.PRIVATE and message.chat.id not in EXCEP_CHATS:
-        LOGGER.info("[Bot PM] Initiated")
+        LOGGER.info("[BOT PM] Initiated")
         try:
             send = await client.send_message(message.from_user.id, text='Leech Started !!')
             await send.delete()
@@ -55,15 +55,14 @@ async def check_bot_pm(client: Client, message: Message):
         except Exception as e:
             LOGGER.warning(e)
             uname = message.from_user.mention
-            username = await getUserName()
             button_markup = InlineKeyboardMarkup([
-                    [InlineKeyboardButton("⚡️ Click Here to Start Me ⚡️", url=f"http://t.me/{username[0]}")] # Still a Bug !!
+                    [InlineKeyboardButton("⚡️ Click Here to Start Me ⚡️", url=f"http://t.me/{(await client.get_me()).username}")]
                 ])
             startwarn = f'''┏ Dear {uname},
 ┃
-┣ <b>Bot is Not Started in PM (Private Chat) yet.</b>
+┣ <b> Bot is Not Started in PM (Private Chat) yet.</b>
 ┃
-┗ <i>From Now on, Links and Leeched Files in PM and Log Channel Only !!</i>'''
+┗ <i> From Now on, Links and Leeched Files in PM and Log Channel Only !!</i>'''
             message = await message.reply_text(text=startwarn, parse_mode=enums.ParseMode.HTML, quote=True, reply_markup=button_markup)
             return False
     else: return True
@@ -74,6 +73,7 @@ async def incoming_message_f(client: Client, message: Message):
         user_command = message.command[0]
     g_id, tag_me = getUserOrChaDetails(message)
     txtCancel = False
+    ubot = (await client.get_me()).username
 
     if FSUB_CHANNEL:
         LOGGER.info("[ForceSubscribe] Initiated")
@@ -85,7 +85,7 @@ async def incoming_message_f(client: Client, message: Message):
     if BOT_PM and LEECH_LOG:
         if not (await check_bot_pm(client, message)):
             return
-    elif BOT_PM and (not LEECH_LOG):
+    elif BOT_PM:
         LOGGER.warning("[Bot PM] Must Provide LEECH_LOG to Use it")
 
     rpy_mssg_id=None
@@ -95,7 +95,7 @@ async def incoming_message_f(client: Client, message: Message):
         
         endText = f"\n📬 <b>Source :</b> <a href='{message.link}'>Click Here</a>\n\n#LeechStart #FXLogs"
         if not txtCancel:
-            if LEECH_LOG:
+            if LEECH_LOG and message.chat.id not in EXCEP_CHATS:
                 text__ += endText
                 logs_msg = await client.send_message(chat_id=int(LEECH_LOG), text=text__, parse_mode=enums.ParseMode.HTML, disable_web_page_preview=True)
                 rpy_mssg_id = logs_msg.id
@@ -155,26 +155,23 @@ async def incoming_message_f(client: Client, message: Message):
         is_zip = False
         is_cloud = False
         is_unzip = False
-        bot_unzip, bot_zip, cloud, cloud_zip, cloud_unzip = [], [], [], [], []
-        for a in app:
-            ubot = (await a.get_me()).username
-            bot_unzip.append(f"{BotCommands.ExtractCommand}@{ubot}".lower())
-            bot_zip.append(f"{BotCommands.ArchiveCommand}@{ubot}".lower())
-            cloud.append(f"{GLEECH_COMMAND}@{ubot}".lower())
-            cloud_zip.append(f"{GLEECH_ZIP_COMMAND}@{ubot}".lower())
-            cloud_unzip.append(f"{GLEECH_UNZIP_COMMAND}@{ubot}".lower())
+        bot_unzip = f"{BotCommands.ExtractCommand}@{ubot}".lower()
+        bot_zip = f"{BotCommands.ArchiveCommand}@{ubot}".lower()
+        cloud = f"{GLEECH_COMMAND}@{ubot}".lower()
+        cloud_zip = f"{GLEECH_ZIP_COMMAND}@{ubot}".lower()
+        cloud_unzip = f"{GLEECH_UNZIP_COMMAND}@{ubot}".lower()
 
-        if user_command == BotCommands.ExtractCommand.lower() or user_command in bot_unzip:
+        if user_command == BotCommands.ExtractCommand.lower() or user_command == bot_unzip:
             is_unzip = True
-        elif user_command == BotCommands.ArchiveCommand.lower() or user_command in bot_zip:
+        elif user_command == BotCommands.ArchiveCommand.lower() or user_command == bot_zip:
             is_zip = True
 
-        if user_command == GLEECH_COMMAND.lower() or user_command in cloud:
+        if user_command == GLEECH_COMMAND.lower() or user_command == cloud:
             is_cloud = True
-        if user_command == GLEECH_UNZIP_COMMAND.lower() or user_command in cloud_unzip:
+        if user_command == GLEECH_UNZIP_COMMAND.lower() or user_command == cloud_unzip:
             is_cloud = True
             is_unzip = True
-        elif user_command == GLEECH_ZIP_COMMAND.lower() or user_command in cloud_zip:
+        elif user_command == GLEECH_ZIP_COMMAND.lower() or user_command == cloud_zip:
             is_cloud = True
             is_zip = True
 
@@ -326,12 +323,13 @@ async def rename_tg_file(client: Client, message: Message):
             return
     elif BOT_PM and (not LEECH_LOG):
         LOGGER.warning("[Bot PM] Must Provide LEECH_LOG to Use it")
+    rpy_mssg_id = None
     if USER_DTS:
         text__, txtCancel = getDetails(client, message, 'Rename')
         await message.reply_text(text=text__, parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
         endText = f"\n📬 <b>Source :</b> <a href='{message.link}'>Click Here</a>\n\n#LeechStart #FXLogs"
         if not txtCancel:
-            if LEECH_LOG:
+            if LEECH_LOG and message.chat.id not in EXCEP_CHATS:
                 text__ += endText
                 logs_msg = await client.send_message(chat_id=int(LEECH_LOG), text=text__, parse_mode=enums.ParseMode.HTML, disable_web_page_preview=True)
                 rpy_mssg_id = logs_msg.id
