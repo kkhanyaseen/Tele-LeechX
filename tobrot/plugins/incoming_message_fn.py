@@ -86,11 +86,12 @@ async def incoming_message_f(client: Client, message: Message):
         if not (await check_bot_pm(client, message)):
             return
     elif BOT_PM:
-        LOGGER.warning("[Bot PM] Must Provide LEECH_LOG to Use it")
+        LOGGER.warning("[BOT PM] Must Provide LEECH_LOG to Use it")
 
-    rpy_mssg_id=None
+    rpy_mssg_id = None
     if USER_DTS:
-        text__, txtCancel = getDetails(client, message, 'Leech')
+        func_name = 'Auto Leech' if AUTO_LEECH else 'Leech'
+        text__, txtCancel = getDetails(client, message, func_name)
         link_text = await message.reply_text(text=text__, parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
         
         endText = f"\n📬 <b>Source :</b> <a href='{message.link}'>Click Here</a>\n\n#LeechStart #FXLogs"
@@ -107,6 +108,13 @@ async def incoming_message_f(client: Client, message: Message):
     cf_name = ''
     if AUTO_LEECH:
         dl_url, cf_name, _, _ = await extract_link(message, "LEECH")
+        buttons = [
+            [InlineKeyboardButton('Leech', callback_data='hi'),
+            InlineKeyboardButton('Extract', callback_data='hi')],
+            [InlineKeyboardButton('Cloud', callback_data='hi'),
+            InlineKeyboardButton('CloudZip', callback_data='hi')]
+        ]
+        await message.reply_text(text="Here you can Configure your Leech Preferences, Auto Set in Command to Disable this !!", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
     elif rep_mess := message.reply_to_message:
         file_name = ''
         if rep_mess.media:
