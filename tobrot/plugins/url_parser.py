@@ -117,7 +117,7 @@ async def bypass_link(text_url: str):
         or "racaty.net" in text_url:
         try:
             url_string = url_link_generate(text_url)
-            return False, q(url_string)
+            return False, q(url_string, safe=':/')
         except DirectDownloadLinkException as e:
             LOGGER.info(f'{text_url}: {e}')
     elif is_hubdrive_link(text_url):
