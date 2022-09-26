@@ -274,7 +274,7 @@ FSUB_CHANNEL = getVar("FSUB_CHANNEL", "")
 # Quotes in Restart Message & Utils >>>>>>>>
 TIMEZONE = getVar("TIMEZONE", "Asia/Kolkata")
 RDM_QUOTE = getVar("RDM_QUOTE", False)
-RDM_QUOTE = True if RDM_QUOTE.lower() == "true" else False
+RDM_QUOTE = True if RDM_QUOTE == "True" else False
 
 # Database Handler >>>>>>>>
 DB_URI = getVar("DATABASE_URL", "")
