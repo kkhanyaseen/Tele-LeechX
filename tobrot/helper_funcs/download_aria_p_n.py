@@ -72,6 +72,7 @@ def __changeFileName(to_upload_file, u_id):
                 else:
                     __newFileName = to_upload_file.replace(args[0], args[1])
             orename(to_upload_file, __newFileName)
+            to_upload_file = __newFileName
         else:
             for root, _, files in owalk(to_upload_file):
                 for org in files:
