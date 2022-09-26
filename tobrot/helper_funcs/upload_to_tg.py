@@ -55,6 +55,7 @@ async def upload_to_tg(
     edit_media=False,
     yt_thumb=None,
 ):
+    global SPLIT_SIZE
     base_file_name = opath.basename(local_file_name)
     file_size = opath.getsize(local_file_name)
 
@@ -105,7 +106,8 @@ async def upload_to_tg(
             )
     else:
         sizze = opath.getsize(local_file_name)
-        SPLIT_SIZE = 4194304000 if isUserPremium and (not IS_RETRT) else 2097152000
+        if not SPLIT_SIZE:
+            SPLIT_SIZE = 4194304000 if isUserPremium and (not IS_RETRT) else 2097152000
         if sizze > TG_MAX_FILE_SIZE and sizze < TG_PRM_FILE_SIZE and isUserPremium and (not IS_RETRT):
             LOGGER.info(f"User Type : Premium ({from_user})")
             sent_message = await upload_single_file(
