@@ -29,7 +29,7 @@ from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 from tobrot import DESTINATION_FOLDER, DOWNLOAD_LOCATION, EDIT_SLEEP_TIME_OUT, INDEX_LINK, VIEW_LINK, LOGGER, \
                    TG_MAX_FILE_SIZE, UPLOAD_AS_DOC, CAP_STYLE, CUSTOM_CAPTION, user_specific_config, LEECH_LOG, \
                    EXCEP_CHATS, EX_LEECH_LOG, BOT_PM, TG_PRM_FILE_SIZE, PRM_USERS, PRM_LOG, isUserPremium, AUTH_CHANNEL, \
-                   UPDATES_CHANNEL
+                   UPDATES_CHANNEL, SPLIT_SIZE
 if isUserPremium:
     from tobrot import userBot
 from tobrot.bot_theme.themes import BotTheme
@@ -105,6 +105,7 @@ async def upload_to_tg(
             )
     else:
         sizze = opath.getsize(local_file_name)
+        SPLIT_SIZE = 4194304000 if isUserPremium and (not IS_RETRT) else 2097152000
         if sizze > TG_MAX_FILE_SIZE and sizze < TG_PRM_FILE_SIZE and isUserPremium and (not IS_RETRT):
             LOGGER.info(f"User Type : Premium ({from_user})")
             sent_message = await upload_single_file(
@@ -120,14 +121,14 @@ async def upload_to_tg(
             if sent_message is None:
                 return
             dict_contatining_uploaded_files[opath.basename(local_file_name)] = sent_message.id
-        elif opath.getsize(local_file_name) > TG_MAX_FILE_SIZE:
+        elif sizze > TG_MAX_FILE_SIZE:
             LOGGER.info(f"User Type : Non Premium ({from_user})")
             i_m_s_g = await message.reply_text(
                 "<b><i>📑Telegram doesn't Support Uploading this File.</i></b>\n"
                 f"<b><i>🎯Detected File Size: {humanbytes(opath.getsize(local_file_name))} </i></b>\n"
                 "\n<code>🗃 Trying to split the files . . .</code>"
             )
-            splitted_dir = await split_large_files(local_file_name)
+            splitted_dir = await split_large_files(local_file_name, SPLIT_SIZE)
             totlaa_sleif = listdir(splitted_dir)
             totlaa_sleif.sort()
             number_of_files = len(totlaa_sleif)
