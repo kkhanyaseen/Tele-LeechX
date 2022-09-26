@@ -107,6 +107,7 @@ async def incoming_message_f(client: Client, message: Message):
     dl_url = ''
     cf_name = ''
     if AUTO_LEECH:
+        user_command = 'leech'
         dl_url, cf_name, _, _ = await extract_link(message, "LEECH")
         buttons = [
             [InlineKeyboardButton('Leech', callback_data='hi'),
@@ -114,7 +115,7 @@ async def incoming_message_f(client: Client, message: Message):
             [InlineKeyboardButton('Cloud', callback_data='hi'),
             InlineKeyboardButton('CloudZip', callback_data='hi')]
         ]
-        await message.reply_text(text="Here you can Configure your Leech Preferences, Auto Set in Command to Disable this !!", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
+        #await message.reply_text(text="Here you can Configure your Leech Preferences, Auto Set in Command to Disable this !!", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
     elif rep_mess := message.reply_to_message:
         file_name = ''
         if rep_mess.media:
