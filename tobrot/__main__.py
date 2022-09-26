@@ -48,7 +48,7 @@ from tobrot.database.db_func import DatabaseManager
 from tobrot.plugins.choose_rclone_config import rclone_command_f
 from tobrot.plugins.custom_thumbnail import clear_thumb_nail, save_thumb_nail
 from tobrot.plugins.incoming_message_fn import g_clonee, g_yt_playlist, incoming_message_f, incoming_purge_message_f, \
-                                               incoming_youtube_dl_f, rename_tg_file
+                                               incoming_youtube_dl_f, rename_tg_file, auto_callback
 from tobrot.plugins.help_func import help_message_f, stats, user_settings, settings_callback, picture_add, pictures, pics_callback
 from tobrot.plugins.speedtest import get_speed
 from tobrot.plugins.mediainfo import mediainfo
@@ -246,20 +246,21 @@ if __name__ == "__main__":
     # Command Initialize >>>>>>>>
     for a in app:
         username = (a.get_me()).username
-        a.add_handler(MessageHandler(
-            incoming_message_f,
-            filters=filters.command([
+        if AUTO_LEECH:
+            a.add_handler(MessageHandler(incoming_message_f, filters=filters.regex(r"^(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))") & filters.chat(chats=AUTH_CHANNEL)))
+        else:
+            a.add_handler(MessageHandler(
+                incoming_message_f,
+                filters=filters.command([
                     BotCommands.LeechCommand, f"{BotCommands.LeechCommand}@{username}",
                     BotCommands.ArchiveCommand, f"{BotCommands.ArchiveCommand}@{username}",
                     BotCommands.ExtractCommand, f"{BotCommands.ExtractCommand}@{username}",
                     GLEECH_COMMAND, f"{GLEECH_COMMAND}@{username}",
                     GLEECH_UNZIP_COMMAND, f"{GLEECH_UNZIP_COMMAND}@{username}",
                     GLEECH_ZIP_COMMAND, f"{GLEECH_ZIP_COMMAND}@{username}",
-                ])
-            & filters.chat(chats=AUTH_CHANNEL),
-        ))
-        if AUTO_LEECH:
-            a.add_handler(MessageHandler(incoming_message_f, filters=filters.regex(r"^(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))") & filters.chat(chats=AUTH_CHANNEL)))
+                    ])
+                & filters.chat(chats=AUTH_CHANNEL),
+            ))
         a.add_handler(MessageHandler(down_load_media_f, filters=filters.command([TELEGRAM_LEECH_COMMAND, f"{TELEGRAM_LEECH_COMMAND}@{username}", TELEGRAM_LEECH_UNZIP_COMMAND, f"{TELEGRAM_LEECH_UNZIP_COMMAND}@{username}"]) & filters.chat(chats=AUTH_CHANNEL)))
         a.add_handler(MessageHandler(incoming_purge_message_f, filters=filters.command(["purge", f"purge@{username}"]) & filters.chat(chats=AUTH_CHANNEL)))
         a.add_handler(MessageHandler(g_clonee, filters=filters.command([f"{BotCommands.GCloneCommand}", f"{BotCommands.GCloneCommand}@{username}"]) & filters.chat(chats=AUTH_CHANNEL)))
@@ -308,6 +309,7 @@ if __name__ == "__main__":
 
         a.add_handler(CallbackQueryHandler(anilist_callbackquery, filters=filters.regex(pattern="^(tags|stream|reviews|relations|characters|home)")))
         a.add_handler(CallbackQueryHandler(imdb_callback, filters=filters.regex(pattern="^imdb")))
+        a.add_handler(CallbackQueryHandler(auto_callback, filters=filters.regex(pattern="^alx")))
         a.add_handler(CallbackQueryHandler(settings_callback, filters=filters.regex(pattern="^showthumb")))
         a.add_handler(CallbackQueryHandler(pics_callback, filters=filters.regex(pattern="^pic")))
         a.add_handler(CallbackQueryHandler(nyaa_nop, filters=filters.regex(pattern="nyaa_nop")))
