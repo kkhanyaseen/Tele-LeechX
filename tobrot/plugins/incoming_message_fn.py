@@ -123,7 +123,7 @@ async def incoming_message_f(client: Client, message: Message, auto_cmd=None):
             InlineKeyboardButton('Extract', callback_data='alxExtract')],
             [InlineKeyboardButton('Archive', callback_data='alxArchive')]
         ]
-        await i_m_sefg.edit(text="<b><i>Here you can Configure your Leech Preferences, ( Auto Set in Command to Disable this ) !!</i></b>", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, quote=True, disable_web_page_preview=True)
+        await i_m_sefg.edit(text="<b><i>Here you can Configure your Leech Preferences, ( Auto Set in Command to Disable this ) !!</i></b>", reply_markup=InlineKeyboardMarkup(buttons), parse_mode=enums.ParseMode.HTML, disable_web_page_preview=True)
         return
     elif AUTO_LEECH and auto_cmd:
         dl_url, cf_name, _, _ = await extract_link(message, "LEECH")
